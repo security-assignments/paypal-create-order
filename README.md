@@ -6,7 +6,7 @@ This avoids the threat of customers modifying javascript to pay whatever they
 want for the purchase.
 
 Paypal client examples were taken from paypal doc pages such as
-<https://developer.paypal.com/docs/checkout/reference/server-integration/set-up-transaction/>.
+<https://developer.paypal.com/docs/archive/checkout/how-to/server-integration/>.
 
 
 ## Configuring
@@ -19,6 +19,7 @@ In gcp secrets, set the two secrets, and expose them as env vars named as below:
 
 * `PAYPAL_SANDBOX_CLIENT_SECRET`
 * `PAYPAL_LIVE_CLIENT_SECRET`
+* `PAYPAL_SHARED_SECRET`
 
 
 ## Use
@@ -32,6 +33,15 @@ Post the following json to the http-target:
   credentials to use to create the order.
 
 
+## Develop locally
+
+```bash
+functions_framework --target=do_webhook --debug --source=main.py
+```
+
+The function should be running at `localhost:8080`
+
+
 ## Deploy
 
 ```bash
@@ -43,7 +53,7 @@ gcloud beta functions deploy security-assignments-paypal-order-create \
   --trigger-http \
   --region us-central1 \
   --security-level secure-always \
-  --set-secrets 'PAYPAL_LIVE_CLIENT_SECRET=PAYPAL_LIVE_CLIENT_SECRET:latest,PAYPAL_SANDBOX_CLIENT_SECRET=PAYPAL_SANDBOX_CLIENT_SECRET:latest'
+  --set-secrets 'PAYPAL_LIVE_CLIENT_SECRET=PAYPAL_LIVE_CLIENT_SECRET:latest,PAYPAL_SANDBOX_CLIENT_SECRET=PAYPAL_SANDBOX_CLIENT_SECRET:latest,PAYPAL_SHARED_SECRET=PAYPAL_SHARED_SECRET:latest'
 ```
 
 

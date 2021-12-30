@@ -1,6 +1,7 @@
 from paypal_client import PayPalClient
 from paypalcheckoutsdk.orders import OrdersCreateRequest
-
+import hashlib
+import os
 
 class CreateOrder(PayPalClient):
 
@@ -31,7 +32,14 @@ class CreateOrder(PayPalClient):
   """Setting up the JSON request body for creating the order. Set the intent in the
   request body to "CAPTURE" for capture intent flow."""
   @staticmethod
-  def build_request_body(gcp_email):
+  def build_request_body(gcp_email, amount="40.00"):
+    SHARED_SECRET = os.environ['PAYPAL_SHARED_SECRET']
+    hash_me = f'{gcp_email}|{amount}|{SHARED_SECRET}'
+    m = hashlib.sha256()
+    m.update(hash_me.encode())
+    sig = m.hexdigest()
+    # print(sig)
+
     """Method to create body with CAPTURE intent"""
     return \
       {
@@ -46,7 +54,7 @@ class CreateOrder(PayPalClient):
           {
             "reference_id": gcp_email,
             "description": f"Access to security-assignments.com lab virtual machines on GCP for email address {gcp_email}",
-            "custom_id": gcp_email,
+            "custom_id": sig,
             "invoice_id": gcp_email,
             "soft_descriptor": "Lab virtual machines",
             "amount": {

@@ -1,6 +1,10 @@
 from flask import jsonify, abort
 from paypal_order import CreateOrder
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def main(request):
 
