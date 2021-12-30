@@ -58,7 +58,7 @@ class CreateOrder(PayPalClient):
             "invoice_id": gcp_email,
             "soft_descriptor": "Lab virtual machines",
             "amount": {
-              "value": "40.00",
+              "value": amount,
               "currency_code": "USD"
             },
             # "amount": {
