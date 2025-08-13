@@ -35,20 +35,46 @@ Post the following json to the http-target:
 
 ## Develop locally
 
+
 ```bash
-functions_framework --target=do_webhook --debug --source=main.py
+LOCAL_DEV=1 functions-framework --target=main --debug --source=main.py
 ```
 
 The function should be running at `localhost:8080`
 
+Modify the store to post to the local service instead of to the gcp-hosted service:
+
+```diff
+diff --git a/store.md b/store.md
+index 5c95a8d..1a9bb9e 100644
+--- a/store.md
++++ b/store.md
+@@ -93,8 +93,8 @@ function initPayPalButton() {
+     },
+     // https://developer.paypal.com/docs/checkout/reference/server-integration/set-up-transaction/
+     createOrder: function(data, actions) {
+-      // return fetch('http://localhost:8080/', {
+-      return fetch('https://us-central1-security-assignments-kali.cloudfunctions.net/security-assignments-paypal-order-create', {
++      return fetch('http://localhost:8080/', {
++      // return fetch('https://us-central1-security-assignments-kali.cloudfunctions.net/security-assignments-paypal-order-create', {
+         method: 'post',
+         headers: {
+           'content-type': 'application/json'
+
+```
+
+In sandbox mode, test credit cards can be used. See https://developer.paypal.com/tools/sandbox/card-testing/#link-simulatesuccessfulpayments
+
+
+The store needs to be running via https in order for the store => paypal CORS requests to succeed.
 
 ## Deploy
 
 ```bash
-gcloud beta functions deploy security-assignments-paypal-order-create \
+gcloud functions deploy security-assignments-paypal-order-create \
   --entry-point main \
   --allow-unauthenticated \
-  --runtime python37 \
+  --runtime python39 \
   --env-vars-file env.yml \
   --trigger-http \
   --region us-central1 \

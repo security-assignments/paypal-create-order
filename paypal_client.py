@@ -8,7 +8,9 @@ class PayPalClient:
         credentials context. Use this instance to invoke PayPal APIs, provided the
         credentials have access. """
 
-        if mode == 'SANDBOX':
+        self.mode = mode
+
+        if self.mode == 'SANDBOX':
             self.client_id = os.environ["PAYPAL_SANDBOX_CLIENT_ID"]
             self.client_secret = os.environ["PAYPAL_SANDBOX_CLIENT_SECRET"]
 

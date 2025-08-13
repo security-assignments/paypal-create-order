@@ -9,11 +9,11 @@ class CreateOrder(PayPalClient):
   """ This is the sample function to create an order. It uses the
     JSON body returned by buildRequestBody() to create an order."""
 
-  def create_order(self, gcp_email, debug=False):
+  def create_order(self, gcp_email, debug=False, amount="50.00"):
     request = OrdersCreateRequest()
     request.prefer('return=representation')
     #3. Call PayPal to set up a transaction
-    request.request_body(self.build_request_body(gcp_email))
+    request.request_body(self.build_request_body(gcp_email, amount=amount))
     response = self.client.execute(request)
     if debug:
       print('Status Code: {}'.format(response.status_code))
@@ -32,7 +32,7 @@ class CreateOrder(PayPalClient):
   """Setting up the JSON request body for creating the order. Set the intent in the
   request body to "CAPTURE" for capture intent flow."""
   @staticmethod
-  def build_request_body(gcp_email, amount="40.00"):
+  def build_request_body(gcp_email, amount):
     SHARED_SECRET = os.environ['PAYPAL_SHARED_SECRET']
     hash_me = f'{gcp_email}|{amount}|{SHARED_SECRET}'
     m = hashlib.sha256()

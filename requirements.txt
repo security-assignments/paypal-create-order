@@ -1,3 +1,4 @@
 paypal-checkout-serversdk
 functions-framework
 python-dotenv
+pyyaml
